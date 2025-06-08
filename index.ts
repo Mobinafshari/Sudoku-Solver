@@ -13,13 +13,28 @@ const sudokuPuzzle = [
 ];
 
 const sudoku = (array: number[][]) => {
-  const baseOnCols: number[][] = [[], [], [], [], [], [], [], [], []];
-  array.forEach((row) => {
-    row.forEach((cell, index) => {
-      baseOnCols[index].push(cell);
+  const baseOnCols = generateColArray(array);
+  array.forEach((row, rowIndex) => {
+    row.forEach((cell, colIndex) => {
+      if (cell !== 0) return;
+      const choices = assignToCell(rowIndex, colIndex);
+      if (choices.length === 0) {
+        let prev = 1;
+        assignToCell(rowIndex, colIndex - 1, prev);
+      }
     });
   });
-  console.log(cellChoices(array, baseOnCols, 0, 2));
+  function assignToCell(
+    rowIndex: number,
+    colIndex: number,
+    selected: number = 0
+  ) {
+    const choices = cellChoices(array, baseOnCols, rowIndex, colIndex);
+    if (!choices[selected]) assignToCell(rowIndex, colIndex - 1, 1);
+    array[rowIndex][colIndex] = choices[selected];
+    return choices;
+  }
+  // return array;
 };
 const cellChoices = (
   array: number[][],
@@ -32,6 +47,15 @@ const cellChoices = (
     (number) =>
       !array[rowIndex].includes(number) && !colArray[colIndex].includes(number)
   );
+};
+const generateColArray = (array: number[][]) => {
+  const baseOnCols: number[][] = [[], [], [], [], [], [], [], [], []];
+  array.forEach((row) => {
+    row.forEach((cell, index) => {
+      baseOnCols[index].push(cell);
+    });
+  });
+  return baseOnCols;
 };
 
 console.log(sudoku(sudokuPuzzle));
