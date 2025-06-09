@@ -67,6 +67,7 @@ const sudoku4x4 = [
 ];
 const Sudoku4 = (array: number[][]) => {
   const newArray = structuredClone(array);
+  const defaultArrayBaseOnCols = generateColArray(array);
   const baseOnCols = generateColArray(array);
   newArray.forEach((row, rowIndex) => {
     row.forEach((cell, colIndex) => {
@@ -82,7 +83,7 @@ const Sudoku4 = (array: number[][]) => {
           rowIndex - rowPrev,
           colIndex - colPrev
         );
-        // console.log(prevChoices, rowIndex - rowPrev, colIndex - colPrev);
+        console.log(prevChoices);
         while (prevChoices.length < 2) {
           if (array[rowIndex][colIndex - colPrev] !== 0) {
             colPrev++;
@@ -90,10 +91,9 @@ const Sudoku4 = (array: number[][]) => {
             colPrev = 0;
             rowPrev++;
           }
-          console.log(array[rowIndex - rowPrev][colIndex - colPrev]);
           prevChoices = cellChoices(
             array,
-            baseOnCols,
+            defaultArrayBaseOnCols,
             rowIndex - rowPrev,
             colIndex - colPrev
           );
